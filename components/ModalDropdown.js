@@ -36,9 +36,12 @@ export default class ModalDropdown extends Component {
     disabled: PropTypes.bool,
     scrollEnabled: PropTypes.bool,
     defaultIndex: PropTypes.number,
-    defaultValue: PropTypes.string,
+    defaultValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object,
+        PropTypes.symbol,
+    ]),
     options: PropTypes.array,
-
     accessible: PropTypes.bool,
     animated: PropTypes.bool,
     showsVerticalScrollIndicator: PropTypes.bool,
@@ -166,26 +169,26 @@ export default class ModalDropdown extends Component {
     const {disabled, accessible, children, textStyle} = this.props;
     const {buttonText} = this.state;
 
-    return (
-      <TouchableOpacity ref={button => this._button = button}
-                        disabled={disabled}
-                        accessible={accessible}
-                        onPress={this._onButtonPress}
-      >
-        {
-          children ||
-          (
-            <View style={styles.button}>
-              <Text style={[styles.buttonText, textStyle]}
-                    numberOfLines={1}
-              >
-                {buttonText}
-              </Text>
-            </View>
-          )
-        }
-      </TouchableOpacity>
-    );
+      return (
+        <TouchableOpacity ref={button => this._button = button}
+                          disabled={disabled}
+                          accessible={accessible}
+                          onPress={this._onButtonPress}
+        >
+          {
+            children ||
+            (
+              <View style={styles.button}>
+                <View style={[styles.buttonText, textStyle]}
+                      numberOfLines={1}
+                >
+                  {buttonText}
+                </View>
+              </View>
+            )
+          }
+        </TouchableOpacity>
+      );
   }
 
   _onButtonPress = () => {
@@ -309,15 +312,11 @@ export default class ModalDropdown extends Component {
     const key = `row_${rowID}`;
     const highlighted = rowID == selectedIndex;
     const row = !renderRow ?
-      (<Text style={[
-        styles.rowText,
-        dropdownTextStyle,
-        highlighted && styles.highlightedRowText,
-        highlighted && dropdownTextHighlightStyle
+      (<View style={[
       ]}
       >
         {rowData}
-      </Text>) :
+      </View>) :
       renderRow(rowData, rowID, highlighted);
     const preservedProps = {
       key,
@@ -376,10 +375,10 @@ export default class ModalDropdown extends Component {
       const value = renderButtonText && renderButtonText(rowData) || rowData.toString();
       this._nextValue = value;
       this._nextIndex = rowID;
-      this.setState({
-        buttonText: value,
-        selectedIndex: rowID
-      });
+      // this.setState({
+      //   buttonText: value,
+      //   selectedIndex: rowID
+      // });
     }
     if (!onDropdownWillHide || onDropdownWillHide() !== false) {
       this.setState({
