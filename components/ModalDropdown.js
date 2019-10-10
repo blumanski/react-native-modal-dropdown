@@ -212,7 +212,7 @@ export default class ModalDropdown extends Component {
     const key = `row_${rowID}`;
     const highlighted = rowID == selectedIndex;
     const row = !renderRow ? (
-      (<View style={[]}>{rowData}</View>
+      <View style={[]}>{rowData}</View>
     ) : (
       renderRow(rowData, rowID, highlighted)
     );
